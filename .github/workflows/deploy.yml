@@ -37,6 +37,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          external_repository:  gp2w/interaciometro.github.io
+          external_repository:  gp2w/gp2w.github.io
           publish_branch: master
           publish_dir: ./127.0.0.1:8050
