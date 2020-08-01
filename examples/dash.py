@@ -18,6 +18,8 @@ df.set_index('id', inplace=True, drop=False)
 
 app = dash.Dash(__name__)
 
+server = app.server # the Flask app
+
 app.layout = html.Div([
     dash_table.DataTable(
         id='datatable-row-ids',
