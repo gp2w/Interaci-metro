@@ -26,6 +26,7 @@ jobs:
       - name: Build static page
         shell: bash
         run: |
+          make clean
           make html
 
       - name: Setup Hugo
