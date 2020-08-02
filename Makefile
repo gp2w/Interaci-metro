@@ -16,6 +16,8 @@ html:
 	cp static/async* 127.0.0.1:8050/_dash-component-suites/dash_core_components/
 	cp static/async-table* 127.0.0.1:8050/_dash-component-suites/dash_table/
 
+	cp -R core/ 127.0.0.1:8050/core/
+
 	ps | grep python | awk '{print $$1}' | xargs kill -9
 
 clean:
