@@ -1,12 +1,13 @@
 import tweepy
 import json
 import argparse
-from utils import to_json
-from coletar_dados import get_tweets, get_likes
-from processar_dados import top_users_likes, top_users_replies
+from core.utils import to_json
+from core.coletar_dados import get_tweets, get_likes
+from core.processar_dados import top_users_likes, top_users_replies
 
 
 def main():
+    
     parser = argparse.ArgumentParser(prog='get_tweets.py')
 
     parser.add_argument(
