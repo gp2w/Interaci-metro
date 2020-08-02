@@ -7,13 +7,28 @@ import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
+import json
+import tweepy
 
-df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminder2007.csv')
-# add an id column and set it as the index
-# in this case the unique ID is just the country name, so we could have just
-# renamed 'country' to 'id' (but given it the display name 'country'), but
-# here it's duplicated just to show the more general pattern.
-df['id'] = df['country']
+import core.coletar_dados as core_cd
+import core.processar_dados as core_pd
+
+with open('core/tokens.json', 'r') as file:
+    tokens = json.load(file)
+
+auth = tweepy.OAuthHandler(tokens['api_key'], tokens['api_secret_key'])
+auth.set_access_token(tokens['access_token'],
+                      tokens['access_token_secret'])
+api = tweepy.API(auth)
+
+# tweets = core_cd.get_tweets(api=api, username='weversonvn')
+likes = core_cd.get_likes(api=api, username='weversonvn')
+
+df = core_pd.top_users_likes(likes=likes)
+
+# df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminder2007.csv')
+
+df['id'] = df['user']
 df.set_index('id', inplace=True, drop=False)
 
 app = dash.Dash(__name__)
@@ -80,7 +95,7 @@ def update_graphs(row_ids, selected_row_ids, active_cell):
             figure={
                 'data': [
                     {
-                        'x': dff['country'],
+                        'x': dff['user'],
                         'y': dff[column],
                         'type': 'bar',
                         'marker': {'color': colors},
@@ -100,9 +115,8 @@ def update_graphs(row_ids, selected_row_ids, active_cell):
         # check if column exists - user may have deleted it
         # If `column.deletable=False`, then you don't
         # need to do this check.
-        for column in ['pop', 'lifeExp', 'gdpPercap'] if column in dff
+        for column in ['count'] if column in dff
     ]
-
 
 if __name__ == '__main__':
     app.run_server(debug=True)
