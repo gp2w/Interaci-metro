@@ -1,5 +1,5 @@
 name: Build and Deploy
-off:
+on:
   push:
     branches:
       - master
