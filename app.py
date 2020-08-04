@@ -13,6 +13,10 @@ import tweepy
 import core.coletar_dados as core_cd
 import core.processar_dados as core_pd
 
+# carregar variaveis de ambiente do .env caso exista
+from dotenv import load_dotenv
+load_dotenv()
+
 auth = tweepy.OAuthHandler(os.environ['API_KEY'], os.environ['API_SECRET_KEY'])
 auth.set_access_token(os.environ['ACCESS_TOKEN'],
                       os.environ['ACCESS_TOKEN_SECRET'])
