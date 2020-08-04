@@ -13,6 +13,9 @@ import tweepy
 import core.coletar_dados as core_cd
 import core.processar_dados as core_pd
 
+# importar css
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
 # carregar variaveis de ambiente do .env caso exista
 from dotenv import load_dotenv
 load_dotenv()
@@ -23,18 +26,27 @@ auth.set_access_token(os.environ['ACCESS_TOKEN'],
 api = tweepy.API(auth)
 
 # tweets = core_cd.get_tweets(api=api, username='weversonvn')
-likes = core_cd.get_likes(api=api, username='weversonvn')
+likes = [] # core_cd.get_likes(api=api, username='weversonvn')
 
 df = core_pd.top_users_likes(likes=likes)
 
 df['id'] = df['user']
 df.set_index('id', inplace=True, drop=False)
 
-app = dash.Dash(__name__)
+# inicializa uma aplicacao em Dash
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 server = app.server # the Flask app
 
 app.layout = html.Div([
+    html.H2("Interaciômetro"),
+    html.H5("Digite um usuario do twitter para realizar uma busca"),
+    html.Div([
+        "Usuario: ", 
+        dcc.Input(id='user-input', value='twitter', type='text'),
+        html.Button(id='submit-button-state', n_clicks=0, children='Buscar'),
+    ]),
+    html.Br(),
     dash_table.DataTable(
         id='datatable-row-ids',
         columns=[
