@@ -7,26 +7,21 @@ import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
-import json
+import os
 import tweepy
 
 import core.coletar_dados as core_cd
 import core.processar_dados as core_pd
 
-with open('core/tokens.json', 'r') as file:
-    tokens = json.load(file)
-
-auth = tweepy.OAuthHandler(tokens['api_key'], tokens['api_secret_key'])
-auth.set_access_token(tokens['access_token'],
-                      tokens['access_token_secret'])
+auth = tweepy.OAuthHandler(os.environ['API_KEY'], os.environ['API_SECRET_KEY'])
+auth.set_access_token(os.environ['ACCESS_TOKEN'],
+                      os.environ['ACCESS_TOKEN_SECRET'])
 api = tweepy.API(auth)
 
 # tweets = core_cd.get_tweets(api=api, username='weversonvn')
 likes = core_cd.get_likes(api=api, username='weversonvn')
 
 df = core_pd.top_users_likes(likes=likes)
-
-# df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminder2007.csv')
 
 df['id'] = df['user']
 df.set_index('id', inplace=True, drop=False)
