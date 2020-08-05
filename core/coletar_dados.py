@@ -8,7 +8,7 @@ logging.basicConfig(format='[%(levelname)s][%(asctime)s]: %(message)s',
 
 def get_tweets(api, username):
     logging.info(f'Buscando tweets de {username}')
-    logging.info('Extração iniciada')
+    # logging.info('Extração iniciada')
     tweets = api.user_timeline(
         screen_name=username, tweet_mode="extended", count=200)
     tweets_data = [tweet._json for tweet in tweets]
@@ -42,10 +42,10 @@ def get_tweets(api, username):
 
 def get_likes(api, username):
     logging.info(f'Buscando curtidas de: {username}')
-    logging.info('Extração iniciada')
+    # logging.info('Extração iniciada')
     likes = api.favorites(screen_name=username,
                           count=200, tweet_mode="extended")
-    logging.info(f'Extraindo {len(likes)} curtidas')
+    # logging.info(f'Extraindo {len(likes)} curtidas')
     likes_data = [tweet._json for tweet in likes]
     likes_collection = likes_data.copy()
 
@@ -64,8 +64,8 @@ def get_likes(api, username):
             else:
                 likes_data = [tweet._json for tweet in likes]
                 likes_collection = likes_collection + likes_data
-                logging.info(
-                    f'Extraindo {len(likes_data)} curtidas')
+                # logging.info(
+                #     f'Extraindo {len(likes_data)} curtidas')
 
         except tweepy.RateLimitError:
             logging.info('Rate Limit atingido')
