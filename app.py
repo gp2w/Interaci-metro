@@ -2,7 +2,7 @@
 # visit http://127.0.0.1:8050/ in your web browser.
 
 import dash
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
@@ -20,15 +20,16 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 from dotenv import load_dotenv
 load_dotenv()
 
+# inicializa api do twitter
 auth = tweepy.OAuthHandler(os.environ['API_KEY'], os.environ['API_SECRET_KEY'])
 auth.set_access_token(os.environ['ACCESS_TOKEN'],
                       os.environ['ACCESS_TOKEN_SECRET'])
 api = tweepy.API(auth)
 
 # tweets = core_cd.get_tweets(api=api, username='weversonvn')
-likes = [] # core_cd.get_likes(api=api, username='weversonvn')
-
-df = core_pd.top_users_likes(likes=likes)
+# likes = core_cd.get_likes(api=api, username='weversonvn')
+# inicializa dataframe vazio
+df = core_pd.top_users_likes(likes=[])
 
 df['id'] = df['user']
 df.set_index('id', inplace=True, drop=False)
@@ -43,24 +44,24 @@ app.layout = html.Div([
     html.H5("Digite um usuario do twitter para realizar uma busca"),
     html.Div([
         "Usuario: ", 
-        dcc.Input(id='user-input', value='twitter', type='text'),
+        dcc.Input(id='user-input', value='', type='text'),
         html.Button(id='submit-button-state', n_clicks=0, children='Buscar'),
     ]),
     html.Br(),
     dash_table.DataTable(
         id='datatable-row-ids',
         columns=[
-            {'name': i, 'id': i, 'deletable': True} for i in df.columns
-            # omit the id column
-            if i != 'id'
+            {'name': i, 'id': i, 'deletable': False} for i in df.columns
+            # omit the id and index column
+            if i != 'id' and i != 'index'            
         ],
         data=df.to_dict('records'),
-        editable=True,
+        editable=False,
         filter_action="native",
         sort_action="native",
         sort_mode='multi',
         row_selectable='multi',
-        row_deletable=True,
+        row_deletable=False,
         selected_rows=[],
         page_action='native',
         page_current= 0,
@@ -68,6 +69,24 @@ app.layout = html.Div([
     ),
     html.Div(id='datatable-row-ids-container')
 ])
+
+@app.callback(Output('datatable-row-ids', 'data'),
+              [Input('submit-button-state', 'n_clicks')],
+              [State('user-input', 'value')])
+def update_username(n_clicks, username):
+    # apaga dataframe anterior
+    df = core_pd.top_users_likes(likes=[])
+    if username != '':
+
+        # tweets = core_cd.get_tweets(api=api, username='weversonvn')
+        likes = core_cd.get_likes(api=api, username=username)
+
+        df = core_pd.top_users_likes(likes=likes)
+
+        df['id'] = df['user']
+        df.set_index('id', inplace=True, drop=False)
+
+    return df.to_dict('records')
 
 @app.callback(
     Output('datatable-row-ids-container', 'children'),
