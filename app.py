@@ -13,9 +13,6 @@ import tweepy
 import core.coletar_dados as core_cd
 import core.processar_dados as core_pd
 
-# importar css
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
 # carregar variaveis de ambiente do .env caso exista
 from dotenv import load_dotenv
 load_dotenv()
@@ -35,7 +32,7 @@ df['id'] = df['user']
 df.set_index('id', inplace=True, drop=False)
 
 # inicializa uma aplicacao em Dash
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(__name__, title='Interaciômetro')
 
 server = app.server # the Flask app
 
