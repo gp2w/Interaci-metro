@@ -7,7 +7,7 @@ logging.basicConfig(format='[%(levelname)s][%(asctime)s]: %(message)s',
                     datefmt='%d/%m/%Y %I:%M:%S %p', level=logging.INFO)
 
 def top_users_likes(likes, num_users=20):
-    logging.info(f'Computando os {num_users} usuários mais curtidos')
+    # logging.info(f'Computando os {num_users} usuários mais curtidos')
     screen_names = np.array([like['user']['screen_name'] for like in likes])
     user, count = np.unique(screen_names, return_counts=True)
     df = pd.DataFrame({'user': user, 'count': count})
