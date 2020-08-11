@@ -2,8 +2,6 @@ import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 
-logging.basicConfig(format='[%(levelname)s][%(asctime)s]: %(message)s',
-                    datefmt='%d/%m/%Y %I:%M:%S %p', level=logging.INFO)
 
 def top_users_likes(likes):
     screen_names = np.array([like['user']['screen_name'] for like in likes])
