@@ -24,7 +24,7 @@ auth.set_access_token(os.environ['ACCESS_TOKEN'],
 api = tweepy.API(auth)
 
 # inicializando dataframe
-df = pd.DataFrame(columns=['user','num_likes'])
+df = pd.DataFrame(columns=['user','num_likes','num_replies','num_retweets','score'])
 
 # inicializa uma aplicacao em Dash
 app = dash.Dash(__name__, title='Interaciômetro')
@@ -44,7 +44,10 @@ app.layout = html.Div([
         id='datatable-row-ids',
         columns=[
             {'name': 'Usuário', 'id': 'user'},
-            {'name': 'Quantidade de Likes', 'id': 'num_likes'}
+            {'name': 'Likes', 'id': 'num_likes'},
+            {'name': 'Replies', 'id': 'num_replies'},
+            {'name': 'Retweets', 'id': 'num_retweets'},
+            {'name': 'Score', 'id': 'score'},
         ],
         data=df.to_dict('records'),
         # editable=False,
@@ -70,9 +73,17 @@ def update_username(n_clicks, username):
     df = pd.DataFrame(columns=['user','num_likes'])
     
     if username != '':
-        # tweets = core_cd.get_tweets(api=api, username='weversonvn')
+        tweets = core_cd.get_tweets(api=api, username=username)
         likes = core_cd.get_likes(api=api, username=username)
-        df = core_pd.top_users_likes(likes=likes)
+        
+        likes_df = core_pd.top_users_likes(likes=likes)
+        replies_df = core_pd.top_users_replies(tweets=tweets)
+        retweets_df = core_pd.top_users_retweets(tweets=tweets)
+
+        df = core_pd.score(likes_df,replies_df,retweets_df)
+
+        # index = df['num_likes'] > 10
+        # df = df[index]
 
     return df.to_dict('records')
 
@@ -81,20 +92,17 @@ def update_username(n_clicks, username):
     [Input('datatable-row-ids', 'derived_virtual_data')])
 def update_graphs(rows):
     
-    if rows is None:
-        dff = pd.DataFrame(columns=['user','num_likes'])
-    else:
-        dff = pd.DataFrame(data=rows,columns=['user','num_likes'])
+    dff = pd.DataFrame(data=rows,columns=['user','num_likes','num_replies','num_retweets','score'])
     
     return [
         dcc.Graph(
-            id='likes',
+            id=column,
             figure={
                 'data': [
                     {
-                        "x": dff["user"],
-                        "y": dff["num_likes"],
-                        "type": "bar",
+                        'x': dff['user'],
+                        'y': dff[column],
+                        'type': 'bar',
                     }
                 ],
                 'layout': {
@@ -103,13 +111,14 @@ def update_graphs(rows):
                     },
                     'yaxis': {
                         'automargin': True,
-                        'title': {'text': 'Likes'}
+                        'title': {'text': column}
                     },
                     'height': 250,
                     'margin': {'t': 10, 'l': 10, 'r': 10},
                 },
             },
         )
+        for column in ['num_likes', 'num_replies', 'num_retweets', 'score'] if column in dff
     ]
 
 if __name__ == '__main__':
