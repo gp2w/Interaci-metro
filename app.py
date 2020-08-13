@@ -35,34 +35,36 @@ app.layout = html.Div([
     html.H2("Interaciômetro"),
     html.H5("Digite um usuario do twitter para realizar uma busca"),
     html.Div([
-        "Usuario: ", 
+        "@ ", 
         dcc.Input(id='user-input', value='', type='text'),
         html.Button(id='submit-button-state', n_clicks=0, children='Buscar', style={'margin-left': 10},),
     ],style={'padding': 10}),
     html.Br(),
-    dash_table.DataTable(
-        id='datatable-row-ids',
-        columns=[
-            {'name': 'Usuário', 'id': 'user'},
-            {'name': 'Likes', 'id': 'num_likes'},
-            {'name': 'Replies', 'id': 'num_replies'},
-            {'name': 'Retweets', 'id': 'num_retweets'},
-            {'name': 'Score', 'id': 'score'},
-        ],
-        data=df.to_dict('records'),
-        # editable=False,
-        filter_action="native",
-        sort_action="native",
-        sort_mode='multi',
-        # row_selectable='multi',
-        # row_deletable=True,
-        # selected_rows=[],
-        page_action='native',
-        page_current= 0,
-        page_size= 15,
-    ),
-    html.Div([],style={'margin': 50}),
-    html.Div(id='datatable-row-ids-container')
+    dcc.Loading(
+        id="loading",
+        type="graph",
+        children=[
+            dash_table.DataTable(
+                id='datatable-row-ids',
+                columns=[
+                    {'name': 'Usuário', 'id': 'user'},
+                    {'name': 'Likes', 'id': 'num_likes'},
+                    {'name': 'Replies', 'id': 'num_replies'},
+                    {'name': 'Retweets', 'id': 'num_retweets'},
+                    {'name': 'Score', 'id': 'score'},
+                ],
+                data=df.to_dict('records'),
+                filter_action="native",
+                sort_action="native",
+                sort_mode='multi',
+                page_action='native',
+                page_current= 0,
+                page_size= 15,
+            ),
+            html.Div([],style={'margin': 50}),
+            html.Div(id='datatable-row-ids-container')
+        ]
+    )
 ])
 
 @app.callback(Output('datatable-row-ids', 'data'),
