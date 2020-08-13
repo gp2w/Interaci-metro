@@ -54,6 +54,18 @@ app = dash.Dash(__name__, title='Interaciômetro',meta_tags=[{
     },{
         'property': 'og:description',
         'content': 'Um medidor de interação de perfis no Twitter.'
+    },{
+        'property': 'twitter:title',
+        'content': 'Interaciômetro'
+    },{
+        'property': 'twitter:description',
+        'content': 'Um medidor de interação de perfis no Twitter.'
+    },{
+        'property': 'twitter:image',
+        'content': 'https://interaciometro.herokuapp.com/assets/logo.png'
+    },{
+        'property': 'twitter:card',
+        'content': 'summary_large_image'
     },
 ])
 
