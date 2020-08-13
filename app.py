@@ -27,7 +27,36 @@ api = tweepy.API(auth)
 df = pd.DataFrame(columns=['user','num_likes','num_replies','num_retweets','score'])
 
 # inicializa uma aplicacao em Dash
-app = dash.Dash(__name__, title='Interaciômetro')
+app = dash.Dash(__name__, title='Interaciômetro',meta_tags=[
+    {
+        'name': 'description',
+        'content': 'Um medidor de interação de perfis no Twitter.'
+    },
+    {
+        'http-equiv': 'X-UA-Compatible',
+        'content': 'IE=edge'
+    },
+    {
+        'name': 'viewport',
+        'content': 'width=device-width, initial-scale=1.0'
+    },
+    {
+        'property': 'og:title',
+        'content': 'Interaciômetro'
+    },
+    {
+        'property': 'og:site_name',
+        'content': 'Interaciômetro'
+    },
+    {
+        'property': 'og:description',
+        'content': 'Um medidor de interação de perfis no Twitter.'
+    },
+    {
+        'property': 'og:image',
+        'content': '/assets/logo.png'
+    },
+])
 
 server = app.server # the Flask app
 
