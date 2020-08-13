@@ -87,8 +87,9 @@ def update_username(n_clicks, username):
 
         df = core_pd.score(likes_df,replies_df,retweets_df)
 
-        # index = df['num_likes'] > 10
-        # df = df[index]
+        # filtrar scores maiores que 10
+        index = pd.to_numeric(df['score']) > 10.0
+        df = df[index]
 
     return df.to_dict('records')
 
