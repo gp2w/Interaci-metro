@@ -77,7 +77,12 @@ def update_username(n_clicks, username):
         likes = core_cd.get_likes(api=api, username=username)
         
         likes_df = core_pd.top_users_likes(likes=likes)
+
         replies_df = core_pd.top_users_replies(tweets=tweets)
+        # tratamento para retirar o próprio usuário das replies
+        index = replies_df['user'] == username
+        replies_df = replies_df.drop(replies_df.index[index])
+
         retweets_df = core_pd.top_users_retweets(tweets=tweets)
 
         df = core_pd.score(likes_df,replies_df,retweets_df)
@@ -95,14 +100,28 @@ def update_graphs(rows):
     dff = pd.DataFrame(data=rows,columns=['user','num_likes','num_replies','num_retweets','score'])
     
     return [
+        # gráfico com likes, replies e retweets
         dcc.Graph(
-            id=column,
+            id='interações',
             figure={
                 'data': [
                     {
                         'x': dff['user'],
-                        'y': dff[column],
+                        'y': dff['num_likes'],
                         'type': 'bar',
+                        'name': 'Likes'
+                    },
+                    {
+                        'x': dff['user'],
+                        'y': dff['num_replies'],
+                        'type': 'bar',  
+                        'name': 'Replies' 
+                    },
+                    {
+                        'x': dff['user'],
+                        'y': dff['num_retweets'],
+                        'type': 'bar',  
+                        'name': 'Retweets' 
                     }
                 ],
                 'layout': {
@@ -111,14 +130,38 @@ def update_graphs(rows):
                     },
                     'yaxis': {
                         'automargin': True,
-                        'title': {'text': column}
+                        'title': {'text': 'interações'}
+                    },
+                    'height': 250,
+                    'margin': {'t': 10, 'l': 10, 'r': 10},
+                },
+            },
+        ),
+        # gráfico com o score de interação
+        dcc.Graph(
+            id='score',
+            figure={
+                'data': [
+                    {
+                        'x': dff['user'],
+                        'y': dff['score'],
+                        'type': 'bar'
+                    }
+                ],
+                'layout': {
+                    'xaxis': {
+                        'automargin': True,
+                    },
+                    'yaxis': {
+                        'automargin': True,
+                        'title': {'text': 'score'}
                     },
                     'height': 250,
                     'margin': {'t': 10, 'l': 10, 'r': 10},
                 },
             },
         )
-        for column in ['num_likes', 'num_replies', 'num_retweets', 'score'] if column in dff
+        # for column in ['num_likes', 'num_replies', 'num_retweets', 'score'] if column in dff
     ]
 
 if __name__ == '__main__':
