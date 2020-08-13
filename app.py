@@ -27,34 +27,33 @@ api = tweepy.API(auth)
 df = pd.DataFrame(columns=['user','num_likes','num_replies','num_retweets','score'])
 
 # inicializa uma aplicacao em Dash
-app = dash.Dash(__name__, title='Interaciômetro',meta_tags=[
-    {
-        'name': 'description',
-        'content': 'Um medidor de interação de perfis no Twitter.'
-    },
-    {
+app = dash.Dash(__name__, title='Interaciômetro',meta_tags=[{
         'http-equiv': 'X-UA-Compatible',
         'content': 'IE=edge'
-    },
-    {
+    },{
         'name': 'viewport',
         'content': 'width=device-width, initial-scale=1.0'
-    },
-    {
-        'property': 'og:title',
-        'content': 'Interaciômetro'
-    },
-    {
+    },{
+        'name': 'description',
+        'content': 'Um medidor de interação de perfis no Twitter.'
+    },{
+        'property': 'og:url',
+        'content': 'https://interaciometro.herokuapp.com/'
+    },{
         'property': 'og:site_name',
         'content': 'Interaciômetro'
-    },
-    {
+    },{
+        'property': 'og:type',
+        'content': 'website'
+    },{
+        'property': 'og:image',
+        'content': 'https://interaciometro.herokuapp.com/assets/logo.png'
+    },{
+        'property': 'og:title',
+        'content': 'interaciometro'
+    },{
         'property': 'og:description',
         'content': 'Um medidor de interação de perfis no Twitter.'
-    },
-    {
-        'property': 'og:image',
-        'content': '/assets/logo.png'
     },
 ])
 
