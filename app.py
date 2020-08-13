@@ -36,8 +36,8 @@ app.layout = html.Div([
     html.H5("Digite um usuario do twitter para realizar uma busca"),
     html.Div([
         "@ ", 
-        dcc.Input(id='user-input', value='', type='text'),
-        html.Button(id='submit-button-state', n_clicks=0, children='Buscar', style={'margin-left': 10},),
+        dcc.Input(id='user-input', value='', type='text', n_submit=0),
+        html.Button(id='submit-button-state', type="submit", n_clicks=0, children='Buscar', style={'margin-left': 10},),
     ],style={'padding': 10}),
     html.Br(),
     dcc.Loading(
@@ -68,9 +68,10 @@ app.layout = html.Div([
 ])
 
 @app.callback(Output('datatable-row-ids', 'data'),
-              [Input('submit-button-state', 'n_clicks')], # n_clicks é somente para a callback ser ativada com o click do botão
+              [Input('submit-button-state', 'n_clicks'), # n_clicks é somente para a callback ser ativada com o click do botão
+              Input('user-input', 'n_submit')], # n_submit é somente para a callback ser ativada com o click do botão
               [State('user-input', 'value')])
-def update_username(n_clicks, username):
+def update_username(n_clicks, n_submit, username):
     # reseta dataframe
     df = pd.DataFrame(columns=['user','num_likes'])
     
