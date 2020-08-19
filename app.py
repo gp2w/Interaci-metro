@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Run this app with `python app.py` and
 # visit http://127.0.0.1:8050/ in your web browser.
 
@@ -73,7 +74,7 @@ server = app.server # the Flask app
 
 app.layout = html.Div([
     html.H2("Interaciômetro"),
-    html.H5("Digite um usuario do twitter para realizar uma busca"),
+    html.H5("Digite um usuário do twitter para realizar uma busca"),
     html.Div([
         "@ ", 
         dcc.Input(id='user-input', value='', type='text', n_submit=0),
