@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  interaciometro:
+    image: interaciometro
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8050:8050
+    environment:
+      ACCESS_TOKEN: ${ACCESS_TOKEN}
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      API_KEY: ${API_KEY}
+      API_SECRET_KEY: ${API_SECRET_KEY}
