@@ -1,44 +1,49 @@
 import tweepy
 import logging
+
+from tweepy.error import TweepError
 # from prettytable import PrettyTable
 
 logging.basicConfig(format='[%(levelname)s][%(asctime)s]: %(message)s',
                     datefmt='%d/%m/%Y %I:%M:%S %p', level=logging.INFO)
 
-
 def get_tweets(api, username):
     logging.info(f'Buscando tweets de {username}')
-    # logging.info('Extração iniciada')
-    tweets = api.user_timeline(
-        screen_name=username, tweet_mode="extended", count=200)
-    tweets_data = [tweet._json for tweet in tweets]
-    logging.info(f'{len(tweets)} tweets extraidos')
-    tweets_collection = tweets_data.copy()
 
-    while(len(tweets) != 0):
-        try:
-            tweets = api.user_timeline(screen_name=username,
-                                       tweet_mode="extended",
-                                       count=200,
-                                       max_id=tweets[len(tweets)-1]._json['id']-1)
-            if (len(tweets) == 0):
-                logging.info('A extração atingiu seu limite.')
-                logging.info(
-                    f'Total de tweets extraídos: {len(tweets_collection)}')
+    try:
+        tweets = api.user_timeline(screen_name=username, tweet_mode="extended", count=200)
+    except tweepy.TweepError:
+        tweets_collection = None
+    else:
+        
+        tweets_data = [tweet._json for tweet in tweets]
+        logging.info(f'{len(tweets)} tweets extraidos')
+        tweets_collection = tweets_data.copy()
+
+        while(len(tweets) != 0):
+            try:
+                tweets = api.user_timeline(screen_name=username,
+                                        tweet_mode="extended",
+                                        count=200,
+                                        max_id=tweets[len(tweets)-1]._json['id']-1)
+                if (len(tweets) == 0):
+                    logging.info('A extração atingiu seu limite.')
+                    logging.info(
+                        f'Total de tweets extraídos: {len(tweets_collection)}')
+                    break
+                else:
+                    tweets_data = [tweet._json for tweet in tweets]
+                    tweets_collection = tweets_collection + tweets_data
+                    logging.info(f'{len(tweets)} tweets extraidos')
+
+            except tweepy.RateLimitError:
+                logging.info('Rate Limit atingido')
+                logging.info('Extração de tweets finalizada')
                 break
-            else:
-                tweets_data = [tweet._json for tweet in tweets]
-                tweets_collection = tweets_collection + tweets_data
-                logging.info(f'{len(tweets)} tweets extraidos')
 
-        except tweepy.RateLimitError:
-            logging.info('Rate Limit atingido')
-            logging.info('Extração de tweets finalizada')
-            break
+        logging.info('Extração de tweets finalizada')
 
-    logging.info('Extração de tweets finalizada')
     return tweets_collection
-
 
 def get_likes(api, username):
     logging.info(f'Buscando curtidas de: {username}')
