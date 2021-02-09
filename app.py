@@ -22,13 +22,11 @@ load_dotenv()
 
 # inicializa api do twitter
 auth = tweepy.OAuthHandler(os.environ['API_KEY'], os.environ['API_SECRET_KEY'])
-auth.set_access_token(os.environ['ACCESS_TOKEN'],
-                      os.environ['ACCESS_TOKEN_SECRET'])
+auth.set_access_token(os.environ['ACCESS_TOKEN'], os.environ['ACCESS_TOKEN_SECRET'])
 api = tweepy.API(auth)
 
 # inicializando dataframe
-df = pd.DataFrame(columns=['user', 'num_likes',
-                           'num_replies', 'num_retweets', 'score'])
+df = pd.DataFrame(columns=['user', 'num_likes', 'num_replies', 'num_retweets', 'score'])
 
 # inicializa uma aplicacao em Dash
 app = dash.Dash(__name__, title='Interaciômetro | GP2W', external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=[{
@@ -70,29 +68,22 @@ app = dash.Dash(__name__, title='Interaciômetro | GP2W', external_stylesheets=[
 }, {
     'property': 'twitter:card',
     'content': 'summary_large_image'
-},
+}
 ])
 
-server = app.server  # the Flask app
+server = app.server # expor variavel server para o Procfile
 
-alert = dbc.Alert(["No momento não é possivel realizar novas requisições.",
-                    html.Br(),
-                    "Por favor, tente mais tarde."],
-                    style={
-                        'margin-left':'50px',
-                        'margin-right':'50px'
-                    },
-                    color="danger",
-                    dismissable=True)  # use dismissable or duration=5000 for alert to close in x milliseconds
+alert = dbc.Alert(["No momento não é possivel realizar novas requisições.", html.Br(), "Por favor, tente mais tarde."],
+                color="danger",
+                dismissable=True) # use dismissable or duration=5000 for alert to close in x milliseconds
 
-app.layout = html.Div([
+app.layout = html.Div(dbc.Container([
     html.H2("Interaciômetro"),
     html.H5("Digite um usuário do twitter para realizar uma busca"),
     html.Div([
         "@ ",
         dcc.Input(id='user-input', value='', type='text', n_submit=0),
-        html.Button(id='submit-button-state', type="submit",
-                    n_clicks=0, children='Buscar', style={'margin-left': 10},),
+        html.Button(id='submit-button', type="submit", n_clicks=0, children='Buscar', style={'margin-left': 10}),
     ], style={'padding': 10}),
     html.Br(),
     html.Div(id="the-alert", children=[]),
@@ -108,7 +99,7 @@ app.layout = html.Div([
                     {'name': 'Likes', 'id': 'num_likes'},
                     {'name': 'Replies', 'id': 'num_replies'},
                     {'name': 'Retweets', 'id': 'num_retweets'},
-                    {'name': 'Score', 'id': 'score'},
+                    {'name': 'Score', 'id': 'score'}
                 ],
                 data=df.to_dict('records'),
                 filter_action="native",
@@ -116,20 +107,20 @@ app.layout = html.Div([
                 sort_mode='multi',
                 page_action='native',
                 page_current=0,
-                page_size=15,
+                page_size=15
             ),
             html.Div([], style={'margin': 50}),
             html.Div(id='datatable-row-ids-container')
         ]
     )
-])
+],
+#className="p-5"
+))
 
-
-@app.callback([Output('the-alert', 'children'),
-               Output('datatable-row-ids', 'data')],
-              # n_clicks é somente para a callback ser ativada com o click do botão
-              [Input('submit-button-state', 'n_clicks')],
-              [State('user-input', 'value')])
+@app.callback(
+    [Output('the-alert', 'children'), Output('datatable-row-ids', 'data')],
+    [Input('submit-button', 'n_clicks')],
+    [State('user-input', 'value')])
 def update_username(n_clicks, username):
     # reseta dataframe
     df = pd.DataFrame(columns=['user', 'num_likes'])
@@ -164,14 +155,12 @@ def update_username(n_clicks, username):
 
     return retornos
 
-
 @app.callback(
     Output('datatable-row-ids-container', 'children'),
     [Input('datatable-row-ids', 'derived_virtual_data')])
 def update_graphs(rows):
 
-    dff = pd.DataFrame(data=rows, columns=[
-                       'user', 'num_likes', 'num_replies', 'num_retweets', 'score'])
+    dff = pd.DataFrame(data=rows, columns=['user', 'num_likes', 'num_replies', 'num_retweets', 'score'])
 
     return [
         # gráfico com likes, replies e retweets
@@ -207,7 +196,7 @@ def update_graphs(rows):
                         'title': {'text': 'interações'}
                     },
                     'height': 250,
-                    'margin': {'t': 10, 'l': 10, 'r': 10},
+                    'margin': {'t': 10, 'l': 10, 'r': 10}
                 },
             },
         ),
@@ -231,13 +220,12 @@ def update_graphs(rows):
                         'title': {'text': 'score'}
                     },
                     'height': 250,
-                    'margin': {'t': 10, 'l': 10, 'r': 10},
+                    'margin': {'t': 10, 'l': 10, 'r': 10}
                 },
             },
         )
         # for column in ['num_likes', 'num_replies', 'num_retweets', 'score'] if column in dff
     ]
-
 
 if __name__ == '__main__':
     app.run_server(debug=True)
