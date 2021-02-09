@@ -2,28 +2,25 @@
 # Run this app with `python app.py` and
 # visit http://127.0.0.1:8050/ in your web browser.
 
-import dash
+from server import app
+
 import dash_table
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 
-from metatags import metatags
+from layouts.navbar import navbar
 
 # inicializando dataframe
 df = pd.DataFrame(columns=['user', 'num_likes', 'num_replies', 'num_retweets', 'score'])
-
-# inicializa uma aplicacao em Dash
-app = dash.Dash(__name__, title='Interaciômetro | GP2W', external_stylesheets=[dbc.themes.BOOTSTRAP], meta_tags=metatags)
-
-server = app.server # expor variavel server para o Procfile
 
 alert = dbc.Alert(["No momento não é possivel realizar novas requisições.", html.Br(), "Por favor, tente mais tarde."],
                 color="danger",
                 dismissable=True) # use dismissable or duration=5000 for alert to close in x milliseconds
 
 app.layout = html.Div(dbc.Container([
+    # navbar,
     html.H2("Interaciômetro"),
     html.H5("Digite um usuário do twitter para realizar uma busca"),
     html.Div([
@@ -60,7 +57,7 @@ app.layout = html.Div(dbc.Container([
         ]
     )
 ],
-#className="p-5"
+# className="p-3"
 ))
 
 from callbacks import *
