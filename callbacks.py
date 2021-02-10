@@ -120,7 +120,6 @@ def update_graphs(rows):
     ]
 
 # add callback for toggling the collapse on small screens
-""" 
 @app.callback(
     Output("navbar-collapse", "is_open"),
     [Input("navbar-toggler", "n_clicks")],
@@ -130,4 +129,3 @@ def toggle_navbar_collapse(n, is_open):
     if n:
         return not is_open
     return is_open
-"""
