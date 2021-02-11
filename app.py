@@ -57,7 +57,8 @@ app.layout = html.Div(
                 html.Div(id='datatable-row-ids-container')
             ]
         )
-    ])
+    ],
+    fluid=True)
 )
 
 from callbacks import *
