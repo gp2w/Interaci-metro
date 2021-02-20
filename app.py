@@ -68,7 +68,13 @@ app.layout = dbc.Container([
                     sort_mode='multi',
                     page_action='native',
                     page_current=0,
-                    page_size=15
+                    page_size=15,
+                    style_as_list_view=True,
+                    style_header={'backgroundColor': 'rgb(30, 30, 30)'},
+                    style_cell={
+                        'backgroundColor': 'rgb(50, 50, 50)',
+                        'color': 'white'
+                    },
                 ),
                 width={"size": 10, "offset": 1}
             )),
