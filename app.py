@@ -19,23 +19,40 @@ alert = dbc.Alert(["No momento não é possivel realizar novas requisições.", 
                 color="danger",
                 dismissable=True) # use dismissable or duration=5000 for alert to close in x milliseconds
 
-app.layout = html.Div(
-    dbc.Container([
-        navbar,
-        #html.H2("Interaciômetro"),
-        html.H6("Digite um usuário do twitter para realizar uma busca"),
-        html.Div([
-            "@ ",
-            dcc.Input(id='user-input', value='', type='text', n_submit=0),
-            html.Button(id='submit-button', type="submit", n_clicks=0, children='Buscar', style={'margin-left': 10}),
-        ], style={'padding': 10}),
-        html.Br(),
-        html.Div(id="the-alert", children=[]),
-        html.Br(),
-        dcc.Loading(
-            id="loading",
-            type="graph",
-            children=[
+app.layout = dbc.Container([
+    navbar,
+    html.Br(),
+    html.Div(id="the-alert", children=[]),
+    html.Br(),
+    dbc.Row(
+        dbc.Col(
+            dbc.Form(
+                dbc.FormGroup([
+                    dbc.Label("Digite um usuário do twitter para realizar uma busca", html_for="user-input"),
+                    dbc.InputGroup(
+                        [
+                            dbc.InputGroupAddon("@", addon_type="prepend"),
+                            dbc.Input(id="user-input", value="", type="text", n_submit=0),
+                            dbc.InputGroupAddon(
+                                dbc.Button("Buscar", id="submit-button", type="submit", n_clicks=0),
+                                addon_type="append",
+                            ),
+                        ]
+                    )
+                ]),
+            ),
+            xs=12,
+            md={"size": 6, "offset": 3},
+            lg={"size": 4, "offset": 4}
+        ),
+        form=True
+    ),
+    html.Br(),
+    dcc.Loading(
+        id="loading",
+        type="graph",
+        children=[
+            dbc.Row(dbc.Col(
                 dash_table.DataTable(
                     id='datatable-row-ids',
                     columns=[
@@ -53,13 +70,20 @@ app.layout = html.Div(
                     page_current=0,
                     page_size=15
                 ),
-                html.Div([], style={'margin': 50}),
-                html.Div(id='datatable-row-ids-container')
-            ]
-        )
-    ],
-    fluid=True)
-)
+                width={"size": 10, "offset": 1}
+            )),
+            html.Div([], style={'margin': 50}),
+            dbc.Row(dbc.Col(
+                html.Div(id='datatable-row-ids-container'),
+                width={"size": 10, "offset": 1}
+            )),
+        ]
+    )
+    
+],
+id="index",
+style={"padding-right": 0,"padding-left":0, "overflow": "hidden"},
+fluid=True)
 
 from callbacks import *
 
