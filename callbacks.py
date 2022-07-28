@@ -1,6 +1,6 @@
 import dash
 from dash.dependencies import Input, Output, State
-import dash_core_components as dcc
+from dash import dcc
 import pandas as pd
 import logging
 

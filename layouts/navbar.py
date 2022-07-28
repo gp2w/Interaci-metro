@@ -1,5 +1,5 @@
+from dash import html
 import dash_bootstrap_components as dbc
-import dash_html_components as html
 
 LOGO = "https://images.plot.ly/logo/new-branding/plotly-logomark.png"
 
@@ -16,7 +16,7 @@ navbar = dbc.Navbar([
                     dbc.Col(dbc.NavbarBrand(html.H5("Interaciômetro"), className="ml-2")),
                 ],
                 align="center",
-                no_gutters=True,
+                className="g-0",
             ),
             href="/",
         ),
