@@ -1,9 +1,6 @@
 import tweepy
 import logging
 
-from tweepy.error import TweepError
-# from prettytable import PrettyTable
-
 logging.basicConfig(format='[%(levelname)s][%(asctime)s]: %(message)s',
                     datefmt='%d/%m/%Y %I:%M:%S %p', level=logging.INFO)
 

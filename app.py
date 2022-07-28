@@ -4,10 +4,8 @@
 
 from server import app
 
-import dash_table
+from dash import dash_table, dcc, html
 import dash_bootstrap_components as dbc
-import dash_core_components as dcc
-import dash_html_components as html
 import pandas as pd
 
 from layouts.navbar import navbar
@@ -27,25 +25,27 @@ app.layout = dbc.Container([
     dbc.Row(
         dbc.Col(
             dbc.Form(
-                dbc.FormGroup([
+                #dbc.FormGroup(
+                [
                     dbc.Label("Digite um usuário do twitter para realizar uma busca", html_for="user-input"),
                     dbc.InputGroup(
                         [
-                            dbc.InputGroupAddon("@", addon_type="prepend"),
+                            #dbc.InputGroupAddon("@", addon_type="prepend"),
                             dbc.Input(id="user-input", value="", type="text", n_submit=0),
-                            dbc.InputGroupAddon(
-                                dbc.Button("Buscar", id="submit-button", type="submit", n_clicks=0),
-                                addon_type="append",
-                            ),
+                            #dbc.InputGroupAddon(
+                            dbc.Button("Buscar", id="submit-button", type="submit", n_clicks=0),
+                            #addon_type="append",
+                            #),
                         ]
                     )
-                ]),
+                ]
+                # ),
             ),
             xs=12,
             md={"size": 6, "offset": 3},
             lg={"size": 4, "offset": 4}
         ),
-        form=True
+        # form=True
     ),
     html.Br(),
     dcc.Loading(
