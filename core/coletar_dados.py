@@ -45,7 +45,7 @@ def get_tweets(api, username):
 def get_likes(api, username):
     logging.info(f'Buscando curtidas de: {username}')
     # logging.info('Extração iniciada')
-    likes = api.favorites(screen_name=username,
+    likes = api.get_favorites(screen_name=username,
                           count=200, tweet_mode="extended")
     # logging.info(f'Extraindo {len(likes)} curtidas')
     likes_data = [tweet._json for tweet in likes]
@@ -53,7 +53,7 @@ def get_likes(api, username):
 
     while(len(likes) != 0):
         try:
-            likes = api.favorites(screen_name=username,
+            likes = api.get_favorites(screen_name=username,
                                   count=200,
                                   tweet_mode="extended",
                                   max_id=likes[len(likes)-1]._json['id']-1)
